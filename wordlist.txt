@@ -1,5 +1,5 @@
 admin/
-qpael/
+qpanel/
 administrator/
 admin1/
 admin2/
@@ -59,6 +59,10 @@ admin/cp.php
 cp.php
 cpanel/
 cp/
+wp-admin/login.php
+wp-admin/
+wp-login/
+wp-login/login.php
 administrator/index.php
 administrator/login.php
 nsw/admin/login.php
