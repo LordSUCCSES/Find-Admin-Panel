@@ -1,4 +1,6 @@
 import requests
+from sys import exit
+from time import sleep
 
 class color:
     RED = "\033[0;31m"
@@ -7,20 +9,37 @@ class color:
 
 class req():
     def get(self, url=""):
+        global bulunan
         try:
             sonuc = requests.get(url)
             if sonuc.status_code == 200:
                 with open("bulundu.txt", "a") as file:
                     file.write(url + " | Bulundu\n")
-                return url + color.BLUE + " | Admin Panel Bulundu" + color.END
+                    bulunan += 1
+                return url + color.BLUE + " | Admin Panel Bulundu +++++++++++++++++++" + color.END
             else:
-                return url + color.RED + " | Bulunmadı" + color.END
+                if bulunan > 0:
+                    return url + color.RED + " | Bulunmadı," + color.BLUE + f" Bulunan Panel: {bulunan}" + color.END
+                else:
+                    return url + color.RED + f" | Bulunmadı" + color.END
         except requests.exceptions.RequestException as e:
             return url + color.RED + f" | Bağlantı Hatası: {e}\n" + color.END
-
+def soruu():
+    soru = str(input("VPN Açtınız mı? (Y/N): ")).upper()
+    if soru == "Y":
+        print("Devam Ediliyor.....")
+        sleep(0.2)
+    elif soru == "N":
+        print("Kurmadan Devam Ediliyor.......")
+        sleep(0.6)
+    else:
+        print("Lütfen Geçerli Bir Kelime Girin")
+        soruu()
+soruu()
 url = input("URL Gir: ")
 dosya_adi = "wordlist.txt"
 wordlist = []
+bulunan = 0
 
 with open(dosya_adi, 'r') as dosya:
     for satir in dosya:

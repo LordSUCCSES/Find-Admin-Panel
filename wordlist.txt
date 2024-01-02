@@ -78,6 +78,10 @@ admin-login.php
 bb-admin/index.html
 bb-admin/login.html
 acceso.php
+login.html
+login.php
+user/login.php
+user/login.html
 bb-admin/admin.html
 admin/home.html
 login.php
