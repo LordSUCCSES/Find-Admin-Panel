@@ -10,18 +10,20 @@ class color:
 class req():
     def get(self, url=""):
         global bulunan
+        global kalanwordlist
         try:
             sonuc = requests.get(url)
+            kalanwordlist -= 1
             if sonuc.status_code == 200:
                 with open("bulundu.txt", "a") as file:
                     file.write(url + " | Bulundu\n")
                     bulunan += 1
-                return url + color.BLUE + " | Admin Panel Bulundu +++++++++++++++++++" + color.END
+                return url + color.BLUE + f" | Admin Panel Bulundu +++++++++++++++++++  | " + color.BLUE + "Kalan Wordlist={kalanwordlist}" + color.END
             else:
                 if bulunan > 0:
-                    return url + color.RED + " | Bulunmadı," + color.BLUE + f" Bulunan Panel: {bulunan}" + color.END
+                    return url + color.RED + " | Bulunmadı," + color.BLUE + f" Bulunan Panel: {bulunan} | " + color.BLUE + "Kalan Wordlist={kalanwordlist}" + color.END
                 else:
-                    return url + color.RED + f" | Bulunmadı" + color.END
+                    return url + color.RED + f" | Bulunmadı Kalan Wordlist={kalanwordlist}" + color.END
         except requests.exceptions.RequestException as e:
             return url + color.RED + f" | Bağlantı Hatası: {e}\n" + color.END
 def soruu():
@@ -44,6 +46,7 @@ bulunan = 0
 with open(dosya_adi, 'r') as dosya:
     for satir in dosya:
         kelime_dizisi = satir.strip().split()
+        kalanwordlist = len(wordlist)
 
         for kelime in kelime_dizisi:
             wordlist.append(kelime)

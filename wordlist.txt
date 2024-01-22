@@ -20,6 +20,9 @@ instadmin/
 memberadmin/
 administratorlogin/
 adm/
+seed-admin/admin/login.php
+seed-admin/admin/
+seed-admin/
 admin/account.php
 admin/index.php
 admin/login.php
