@@ -1,5 +1,5 @@
 import requests
-from sys import exit
+from concurrent.futures import ThreadPoolExecutor
 from time import sleep
 
 class color:
@@ -8,24 +8,21 @@ class color:
     END = "\033[0m"
 
 class req():
-    def get(self, url=""):
-        global bulunan
-        global kalanwordlist
+    def __init__(self, url):
+        self.url = url
+
+    def get(self, kelime):
         try:
-            sonuc = requests.get(url)
-            kalanwordlist -= 1
+            sonuc = requests.get(self.url + kelime)
             if sonuc.status_code == 200:
                 with open("bulundu.txt", "a") as file:
-                    file.write(url + " | Bulundu\n")
-                    bulunan += 1
-                return url + color.BLUE + f" | Admin Panel Bulundu +++++++++++++++++++  | " + color.BLUE + "Kalan Wordlist={kalanwordlist}" + color.END
+                    file.write(self.url + kelime + " | Bulundu\n")
+                return self.url + kelime + color.BLUE + " | Admin Panel Bulundu +++++++++++++++++++\n" + color.END
             else:
-                if bulunan > 0:
-                    return url + color.RED + " | Bulunmadı," + color.BLUE + f" Bulunan Panel: {bulunan} | " + color.BLUE + "Kalan Wordlist={kalanwordlist}" + color.END
-                else:
-                    return url + color.RED + f" | Bulunmadı Kalan Wordlist={kalanwordlist}" + color.END
+                return self.url + kelime + color.RED + " | Bulunmadı\n" + color.END
         except requests.exceptions.RequestException as e:
-            return url + color.RED + f" | Bağlantı Hatası: {e}\n" + color.END
+            return self.url + kelime + color.RED + f" | Bağlantı Hatası: {e}\n" + color.END
+
 def soruu():
     soru = str(input("VPN Açtınız mı? (Y/N): ")).upper()
     if soru == "Y":
@@ -37,20 +34,21 @@ def soruu():
     else:
         print("Lütfen Geçerli Bir Kelime Girin")
         soruu()
+
 soruu()
 url = input("URL Gir: ")
 dosya_adi = "wordlist.txt"
 wordlist = []
-bulunan = 0
 
 with open(dosya_adi, 'r') as dosya:
     for satir in dosya:
         kelime_dizisi = satir.strip().split()
-        kalanwordlist = len(wordlist)
-
         for kelime in kelime_dizisi:
             wordlist.append(kelime)
 
-for kelime in wordlist:
-    yeni_url = url + kelime
-    print(req().get(str(yeni_url)))
+def thread_function(word):
+    result = req(url).get(word)
+    print(result)
+
+with ThreadPoolExecutor(max_workers=10) as executor:
+    executor.map(thread_function, wordlist)
